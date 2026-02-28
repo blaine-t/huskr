@@ -133,3 +133,26 @@ pub struct NewMessage {
     pub recipient_id: i64,
     pub content: String,
 }
+
+// ---------------------------------------------------------------------------
+// Likes
+// ---------------------------------------------------------------------------
+
+/// Records a like (or pass) from one user toward another.
+/// When both sides have `is_like = true`, a match can be created.
+#[derive(Clone, Debug, Serialize, Deserialize, sqlx::FromRow)]
+pub struct Like {
+    pub id: i64,
+    pub liker_id: i64,
+    pub liked_id: i64,
+    /// `true` = liked, `false` = passed
+    pub is_like: bool,
+    pub created_at: String,
+}
+
+/// Payload used when a user likes or passes on another profile.
+#[derive(Debug, Deserialize)]
+pub struct NewLike {
+    pub liked_id: i64,
+    pub is_like: bool,
+}
