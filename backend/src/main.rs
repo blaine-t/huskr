@@ -73,11 +73,11 @@ async fn main() -> anyhow::Result<()> {
         .allow_credentials(true);
 
     let protected = Router::new()
-        .route("/api/user/me", get(me))
-        .route("/api/likes", post(submit_like))
+        .route("/user/me", get(me))
+        .route("/likes", post(submit_like))
         // static segment must be declared before the dynamic :id capture
-        .route("/api/profiles/compatible", get(compatible_profiles))
-        .route("/api/profiles/{id}", get(get_profile))
+        .route("/profiles/compatible", get(compatible_profiles))
+        .route("/profiles/{id}", get(get_profile))
         .layer(middleware::from_fn_with_state(state.clone(), require_user));
 
     let app = Router::new()
