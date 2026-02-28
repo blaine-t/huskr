@@ -78,10 +78,16 @@ async fn main() -> anyhow::Result<()> {
     let frontend_origin: HeaderValue = frontend_url
         .parse()
         .expect("FRONTEND_URL is not a valid HTTP origin");
-    let localhost_origin: HeaderValue = "http://localhost:8080".parse().unwrap();
+
+    let origins = [
+        "http://localhost:8080".parse().unwrap(),     
+        "http://0.0.0.0:8080".parse().unwrap(),
+        "http://127.0.0.1:8080".parse().unwrap(),
+        frontend_origin
+    ];
+
     let cors = CorsLayer::new()
-        .allow_origin(frontend_origin)
-        .allow_origin(localhost_origin)
+        .allow_origin(origins)
         .allow_methods([Method::GET, Method::POST, Method::DELETE, Method::OPTIONS])
         .allow_headers([ACCEPT_ENCODING,CONTENT_ENCODING, REFERER, ORIGIN, ACCEPT, CONTENT_TYPE, ACCEPT_CHARSET, REFERER, ACCESS_CONTROL_ALLOW_CREDENTIALS])
         .expose_headers([SET_COOKIE, CONTENT_ENCODING, ACCEPT_ENCODING])
