@@ -10,7 +10,11 @@ use tower_sessions::{MemoryStore, SessionManagerLayer};
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt, EnvFilter};
 
 use backend::{
-    api::{likes::submit_like, user::me},
+    api::{
+        likes::submit_like,
+        profiles::{compatible_profiles, get_profile},
+        user::me,
+    },
     auth::{
         backend::MicrosoftBackend,
         routes::{callback, login, logout},
@@ -71,6 +75,9 @@ async fn main() -> anyhow::Result<()> {
     let protected = Router::new()
         .route("/api/user/me", get(me))
         .route("/api/likes", post(submit_like))
+        // static segment must be declared before the dynamic :id capture
+        .route("/api/profiles/compatible", get(compatible_profiles))
+        .route("/api/profiles/{id}", get(get_profile))
         .layer(middleware::from_fn_with_state(state.clone(), require_user));
 
     let app = Router::new()
