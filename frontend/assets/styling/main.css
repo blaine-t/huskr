@@ -5,14 +5,14 @@
         --text-color: rgb(232, 237, 245);
         --text-color-opposite: rgb(28,20,12);
 
-        --card-color: #2e3034;
+        --card-color: #ff9c88;
         --card-hover: rgb(75, 73, 73);
 
         --shadow-color: black;
 
-        --accept-color: #1eb940;
+        --accept-color: #43c15f;
         --accept-hover: #63ee81;
-        --deny-color: #f04351;
+        --deny-color: #fd606d;
         --deny-hover: #ff606d;
     }
 }
@@ -57,7 +57,7 @@ body {
     background-color: var(--card-color);
     border-radius: 10px;
     padding: 10px;
-    box-shadow: 0px 0px 4px #222121;
+    box-shadow: 0px 0px 4px var(--shadow-color);
 }
 
 img {
@@ -74,15 +74,16 @@ img {
 
 .top_left {
     position: absolute;
-    top: 8px;
-    left: 16px;
+    bottom: 0px;
+    left: 30px;
     font-size: 4em;
-    background-color: #101010;
+    text-shadow: #101010 0 0 8px;
 }
 
 .user_button {
     width: 100%;
     padding: 3px 40px;
+    padding-top: 8px;
     border: 0px;
     border-radius: 10px;
     background-color: var(--card-color);
@@ -97,4 +98,15 @@ img {
 h2 {
     margin-left: 5px;
     padding-left: 0px;
+}
+
+.stacked {
+    padding-top: min(2em, 1vh);
+    margin: auto;
+    width: 80%;
+    max-width: 34em;
+    min-width: min(24em, 90%);
+    display: flex;
+    flex-direction: row;
+    font-family:'Jost', sans-serif;
 }

@@ -46,6 +46,8 @@ const MAIN_CSS: Asset = asset!("/assets/styling/main.css");
 const LIBERATOR: Asset = asset!("/assets/Liberator-Heavy.woff2");
 const LIBERATORITALIC: Asset = asset!("/assets/Liberator-HeavyItalic.woff2");
 
+const LOGO: Asset = asset!("/assets/logo.png");
+
 fn main() {
     // The `launch` function is the main entry point for a dioxus app. It takes a component and renders it with the platform feature
     // you have enabled
@@ -66,6 +68,8 @@ fn App() -> Element {
         document::Link { rel: "stylesheet", href: MAIN_CSS }
         document::Link { rel: "font", href: LIBERATOR }
         document::Link { rel: "font", href: LIBERATORITALIC }
+        document::Link { rel: "font", href: LOGO }
+
 
 
         // The router component renders the route enum we defined above. It will handle synchronization of the URL and render

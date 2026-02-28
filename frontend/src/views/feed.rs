@@ -1,6 +1,7 @@
 use crate::components::Hero;
 use dioxus::{html::{img::src}, prelude::*};
 
+
 /// The Home page component that will be rendered when the current route is `[Route::Home]`
 #[component]
 pub fn Feed() -> Element {
@@ -14,19 +15,32 @@ pub fn Feed() -> Element {
                 class: "card",
                 div {
                     class: "image_container",
-                    img { src: "https://www.ciee.org/sites/default/files/styles/650h/public/blog/2018-05/6a010536fa9ded970b0224df30ce71200b.jpg?itok=iJzB8XaM" },
+                    img { src: "https://www.shutterstock.com/image-photo/fashion-industry-black-woman-designer-600nw-2235667567.jpg" },
                     h1 { 
                         class: "top_left",
                         "Rachel"
                     }
                 }
-                
                 h2 { "Hi! I'm Rachel. I'm 15 and a math major. Looking for fellow travelers to Little St. James."}
-                button { 
-                    class: "user_button",
-                    "Match?"
-                 }
-                 
+                h1 {
+                    "Marry?"
+                }
+                div { 
+                    class: "stacked",
+                    button { 
+                        style: "background-color: var(--accept-color)",
+                        class: "user_button",
+                        "YES PLEASE"
+                    }
+                    button { 
+                        style: "background-color: var(--deny-color)",
+                        class: "user_button",
+                        "TOO YOUNG"
+                    }
+                }
+
+                
+                
             }
             div {
 

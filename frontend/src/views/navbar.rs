@@ -3,6 +3,9 @@ use dioxus::prelude::*;
 
 const NAVBAR_CSS: Asset = asset!("/assets/styling/navbar.css");
 
+const LOGO: Asset = asset!("/assets/logo.png");
+
+
 /// The Navbar component that will be rendered on all pages of our app since every page is under the layout.
 ///
 ///
@@ -14,24 +17,40 @@ pub fn Navbar() -> Element {
         document::Link { rel: "stylesheet", href: NAVBAR_CSS }
         document::Link { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap"}
         div {
+            class: "navbar",
             id: "navbar",
-            h1 {  
-            Link {
-                to: Route::Home {},
-                "HUSKR"
+            ul {  
+                li {
+                    float: "left",
+                    h1 {  
+                    Link {
+                        to: Route::Home {},
+                        "HUSKR",
+                    }
+                    }
+                }
+            
+            li {
+                float: "right",
+                h1 {
+                    Link {
+                    to: Route::Register {  },
+                    "Register"
+                }
+                }
+                
             }
-            Link {
-                to: Route::Blog { id: 1 },
-                "Blog"
-            }
-            Link {
-                to: Route::Register {  },
-                "Register"
-            }
-            Link {
+            li {
+                float: "right",
+                h1 {  
+                Link {
                 to: Route::Feed {},
                 "Feed"
+                }
+                }
             }
+            
+            
             }
         }
 

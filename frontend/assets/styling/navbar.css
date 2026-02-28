@@ -1,30 +1,57 @@
 @font-face {
-  font-family: "Roboto Condensed"; /* set name */
-  src: url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap'); /* url of the font */
+  font-family: "Roboto Condensed";
+  /* set name */
+  src: url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap');
+  /* url of the font */
 }
 
-#navbar {
-    font-family: "Roboto Condensed";
-    background-color: #9e0000;
-    position: fixed;
-    top: 0px;
-    height: 4.5em;
-    padding-left: 10%;
-    padding-right: 10%;
-    margin: 0;
-    width: 100%;
+
+.navbar {
+  font-family: "Roboto Condensed";
+  background-color: #ff5656;
+  box-shadow: var(--shadow-color) 0px 0px 10px;
+  position: fixed;
+  top: 0px;
+  height: 4.5em;
+  padding-left: 10%;
+  width: 80%;
+  margin-right: 30%;
+  margin: 0;
+  width: 100%;
 }
 
-#navbar a {
-  color: #ffffff;
-  margin-right: 20px;
-  margin-left: 20px;
+.navbar ul {
+  list-style-type: none;
+  margin: 0;
+  margin-left: 2em;
+  margin-right: 20em;
+  padding: 0;
+  overflow: hidden;
+}
+
+.navbar li {
+  float: left;
+  margin-left: 0.2em;
+  margin-right: 0.5em;
+}
+
+a:link,
+a:visited {
+  color: rgb(0, 102, 255);
+}
+
+.navbar a {
+  font-size: 1.3em;
+  font-weight: bolder;
+  display: block;
+  color: var(--text-color-opposite);
+  text-align: center;
+  padding: 8px;
   text-decoration: none;
-  transition: color 0.2s ease;
+  transition-duration: 0.15s;
 }
 
-
-#navbar a:hover {
-  cursor: pointer;
-  color: #91a4d2;
+.navbar li a:hover {
+  border-bottom: 3px solid rgb(216, 80, 80);
+  background-color: rgb(255, 42, 42);
 }
