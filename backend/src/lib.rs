@@ -5,7 +5,10 @@ pub mod error;
 pub mod middleware;
 pub mod models;
 
+use std::sync::Arc;
+
 use axum::extract::FromRef;
+use object_store::ObjectStore;
 use sqlx::SqlitePool;
 
 use crate::auth::backend::MicrosoftBackend;
@@ -18,6 +21,7 @@ pub struct AppState {
     /// Base URL of the Leptos frontend (e.g. `http://localhost:3001`).
     /// Used for post-auth redirects and CORS allow-origin.
     pub frontend_url: String,
+    pub store: Arc<dyn ObjectStore>,
 }
 
 impl FromRef<AppState> for SqlitePool {

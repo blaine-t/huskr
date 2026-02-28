@@ -5,7 +5,8 @@ edition = "2024"
 
 [dependencies]
 # web
-axum         = "0.8.8"
+axum         = { version = "0.8.8", features = ["multipart"] }
+bytes        = "1"
 axum-login   = "0.18.0"
 tower-http   = { version = "0.6", features = ["cors", "trace"] }
 tower-sessions = { version = "0.14", features = ["memory-store"] }

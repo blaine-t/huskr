@@ -2,14 +2,16 @@ use std::collections::HashMap;
 
 use axum::{
     Json,
+    body::Body,
     extract::{Path, State},
-    http::StatusCode,
-    response::IntoResponse,
+    http::{StatusCode, header},
+    response::{IntoResponse, Response},
 };
 use axum_login::AuthSession;
+use object_store::{ObjectStoreExt, path::Path as StorePath};
 use sqlx::SqlitePool;
 
-use crate::{auth::backend::MicrosoftBackend, error::AppError, models::{User, UserResponse}};
+use crate::{AppState, auth::backend::MicrosoftBackend, error::AppError, models::{User, UserResponse}};
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -159,4 +161,46 @@ pub async fn compatible_profiles(
         .collect();
 
     Ok(Json(profiles).into_response())
+}
+
+// ---------------------------------------------------------------------------
+// GET /profiles/:id/image
+// ---------------------------------------------------------------------------
+
+/// Streams the profile image for user `id` from object storage.
+/// Returns 404 if the user has no image on file.
+pub async fn get_profile_image(
+    _auth_session: AuthSession<MicrosoftBackend>,
+    State(state): State<AppState>,
+    Path(profile_id): Path<i64>,
+) -> Result<Response, AppError> {
+    let image_key: Option<String> = sqlx::query_scalar(
+        "SELECT image_key FROM users WHERE id = ?1",
+    )
+    .bind(profile_id)
+    .fetch_optional(&state.pool)
+    .await?
+    .flatten();
+
+    let Some(key) = image_key else {
+        return Ok(StatusCode::NOT_FOUND.into_response());
+    };
+
+    let path = StorePath::from(key.as_str());
+    let result = state
+        .store
+        .get(&path)
+        .await
+        .map_err(|e| AppError::Internal(e.to_string()))?;
+
+    let bytes = result
+        .bytes()
+        .await
+        .map_err(|e| AppError::Internal(e.to_string()))?;
+
+    Ok((
+        [(header::CONTENT_TYPE, "image/jpeg")],
+        Body::from(bytes),
+    )
+        .into_response())
 }

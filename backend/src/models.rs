@@ -16,6 +16,9 @@ pub struct User {
     pub age: Option<i64>,
     pub is_rso: bool,
     pub major: Option<String>,
+    // Extended profile fields
+    pub bio: Option<String>,
+    pub image_key: Option<String>,
     pub created_at: String,
     pub updated_at: String,
 }
@@ -34,6 +37,8 @@ pub struct UserResponse {
     pub age: Option<i64>,
     pub is_rso: bool,
     pub major: Option<String>,
+    pub bio: Option<String>,
+    pub image_key: Option<String>,
     pub interests: Vec<String>,
     pub created_at: String,
     pub updated_at: String,
@@ -51,6 +56,8 @@ impl UserResponse {
             age: u.age,
             is_rso: u.is_rso,
             major: u.major,
+            bio: u.bio,
+            image_key: u.image_key,
             interests,
             created_at: u.created_at,
             updated_at: u.updated_at,

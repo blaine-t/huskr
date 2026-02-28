@@ -9,11 +9,15 @@ use tower_http::{cors::CorsLayer, trace::TraceLayer};
 use tower_sessions::{MemoryStore, SessionManagerLayer};
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt, EnvFilter};
 
+use std::sync::Arc;
+
+use object_store::local::LocalFileSystem;
+
 use backend::{
     api::{
         likes::submit_like,
-        profiles::{compatible_profiles, get_profile},
-        user::me,
+        profiles::{compatible_profiles, get_profile, get_profile_image},
+        user::{me, update_profile},
     },
     auth::{
         backend::MicrosoftBackend,
@@ -35,6 +39,11 @@ async fn main() -> anyhow::Result<()> {
 
     let database_url = std::env::var("DATABASE_URL").unwrap_or_else(|_| "sqlite:app.db".into());
     let pool = init_pool(&database_url).await?;
+
+    let store_path = std::env::var("OBJECT_STORE_PATH").unwrap_or_else(|_| "./uploads".into());
+    std::fs::create_dir_all(&store_path)?;
+    let store: Arc<dyn object_store::ObjectStore> =
+        Arc::new(LocalFileSystem::new_with_prefix(&store_path)?);
 
     let client_id = std::env::var("AZURE_CLIENT_ID")?;
     let client_secret = std::env::var("AZURE_CLIENT_SECRET")?;
@@ -59,6 +68,7 @@ async fn main() -> anyhow::Result<()> {
         pool,
         backend,
         frontend_url: frontend_url.clone(),
+        store,
     };
 
     // CORS — must allow credentials so the browser sends the session cookie
@@ -74,10 +84,12 @@ async fn main() -> anyhow::Result<()> {
 
     let protected = Router::new()
         .route("/user/me", get(me))
+        .route("/user/profile", post(update_profile))
         .route("/likes", post(submit_like))
         // static segment must be declared before the dynamic :id capture
         .route("/profiles/compatible", get(compatible_profiles))
         .route("/profiles/{id}", get(get_profile))
+        .route("/profiles/{id}/image", get(get_profile_image))
         .layer(middleware::from_fn_with_state(state.clone(), require_user));
 
     let app = Router::new()
