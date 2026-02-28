@@ -1,0 +1,30 @@
+@font-face {
+  font-family: "Roboto Condensed"; /* set name */
+  src: url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap'); /* url of the font */
+}
+
+#navbar {
+    font-family: "Roboto Condensed";
+    background-color: #9e0000;
+    position: fixed;
+    top: 0px;
+    height: 4.5em;
+    padding-left: 10%;
+    padding-right: 10%;
+    margin: 0;
+    width: 100%;
+}
+
+#navbar a {
+  color: #ffffff;
+  margin-right: 20px;
+  margin-left: 20px;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+
+#navbar a:hover {
+  cursor: pointer;
+  color: #91a4d2;
+}
