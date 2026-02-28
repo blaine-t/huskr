@@ -34,12 +34,13 @@ pub struct UserResponse {
     pub age: Option<i64>,
     pub is_rso: bool,
     pub major: Option<String>,
+    pub interests: Vec<String>,
     pub created_at: String,
     pub updated_at: String,
 }
 
-impl From<User> for UserResponse {
-    fn from(u: User) -> Self {
+impl UserResponse {
+    pub fn from_user(u: User, interests: Vec<String>) -> Self {
         Self {
             id: u.id,
             oid: u.oid,
@@ -50,6 +51,7 @@ impl From<User> for UserResponse {
             age: u.age,
             is_rso: u.is_rso,
             major: u.major,
+            interests,
             created_at: u.created_at,
             updated_at: u.updated_at,
         }
