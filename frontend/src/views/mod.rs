@@ -22,3 +22,8 @@ pub use register::Register;
 
 mod feed;
 pub use feed::Feed;
+
+mod my_profile;
+pub use my_profile::MyProfile;
+
+pub const API_URL: &str = "https://api.huskr.us/";

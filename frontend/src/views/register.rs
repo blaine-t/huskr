@@ -13,9 +13,10 @@ pub fn Register() -> Element {
             }
             div {
                 h1 {"Sign up with UNL SSO:"}
-                input {
-                    "test"
+                a {
+                    href: "https://api.huskr.us/auth/login", "ligma",
                 }
+                
             }
             div {
 
