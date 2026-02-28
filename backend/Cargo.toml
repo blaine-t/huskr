@@ -4,5 +4,35 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-axum = "0.8.8"
-rusqlite = "0.38.0"
+# web
+axum         = "0.8.8"
+axum-login   = "0.18.0"
+tower-http   = { version = "0.6", features = ["cors", "trace"] }
+tower-sessions = { version = "0.14", features = ["memory-store"] }
+
+# database
+sqlx = { version = "0.8", features = ["sqlite", "runtime-tokio", "migrate"] }
+
+# auth
+oauth2   = "5"
+reqwest  = { version = "0.12", features = ["json", "rustls-tls"], default-features = false }
+base64   = "0.22"
+
+# storage
+object_store = "0.13.1"
+
+# runtime
+tokio = { version = "1", features = ["full"] }
+
+# serialization / errors
+serde      = { version = "1", features = ["derive"] }
+serde_json = "1"
+thiserror  = "2"
+
+# tracing
+tracing            = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+
+# env
+dotenvy = "0.15"
+anyhow  = "1"

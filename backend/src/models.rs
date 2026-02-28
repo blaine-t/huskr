@@ -1,0 +1,43 @@
+use axum_login::AuthUser;
+use serde::{Deserialize, Serialize};
+
+#[derive(Clone, Debug, Serialize, Deserialize, sqlx::FromRow)]
+pub struct User {
+    pub id: i64,
+    pub oid: String,
+    pub email: Option<String>,
+    pub display_name: Option<String>,
+    pub tenant_id: Option<String>,
+    pub access_token: Option<String>,
+    pub refresh_token: Option<String>,
+    pub id_token: Option<String>,
+    pub created_at: String,
+    pub updated_at: String,
+}
+
+impl AuthUser for User {
+    type Id = i64;
+
+    fn id(&self) -> Self::Id {
+        self.id
+    }
+
+    fn session_auth_hash(&self) -> &[u8] {
+        match &self.access_token {
+            Some(token) => token.as_bytes(),
+            None => &[],
+        }
+    }
+}
+
+/// Claims decoded from the Microsoft id_token (JWT middle segment).
+#[derive(Debug, Deserialize)]
+pub struct IdTokenClaims {
+    /// Object ID — stable per-user identifier in AAD
+    pub oid: String,
+    pub email: Option<String>,
+    /// Display name
+    pub name: Option<String>,
+    /// Tenant ID
+    pub tid: Option<String>,
+}
