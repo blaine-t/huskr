@@ -10,10 +10,14 @@ use sqlx::SqlitePool;
 
 use crate::auth::backend::MicrosoftBackend;
 
+/// Shared application state threaded through Axum handlers.
 #[derive(Clone)]
 pub struct AppState {
     pub pool: SqlitePool,
     pub backend: MicrosoftBackend,
+    /// Base URL of the Leptos frontend (e.g. `http://localhost:3001`).
+    /// Used for post-auth redirects and CORS allow-origin.
+    pub frontend_url: String,
 }
 
 impl FromRef<AppState> for SqlitePool {
