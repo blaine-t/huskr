@@ -1,7 +1,7 @@
 use axum::{
     http::{header, HeaderValue, Method},
     middleware,
-    routing::get,
+    routing::{get, post},
     Router,
 };
 use axum_login::AuthManagerLayerBuilder;
@@ -10,7 +10,7 @@ use tower_sessions::{MemoryStore, SessionManagerLayer};
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt, EnvFilter};
 
 use backend::{
-    api::user::me,
+    api::{likes::submit_like, user::me},
     auth::{
         backend::MicrosoftBackend,
         routes::{callback, login, logout},
@@ -70,6 +70,7 @@ async fn main() -> anyhow::Result<()> {
 
     let protected = Router::new()
         .route("/api/user/me", get(me))
+        .route("/api/likes", post(submit_like))
         .layer(middleware::from_fn_with_state(state.clone(), require_user));
 
     let app = Router::new()
