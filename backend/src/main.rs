@@ -5,6 +5,7 @@ use axum::{
     Router,
 };
 use axum_login::AuthManagerLayerBuilder;
+use reqwest::header::ACCEPT_ENCODING;
 use tower_http::{cors::CorsLayer, trace::TraceLayer};
 use tower_sessions::{MemoryStore, SessionManagerLayer};
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt, EnvFilter};
@@ -12,6 +13,7 @@ use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt, EnvFilte
 use std::sync::Arc;
 
 use object_store::local::LocalFileSystem;
+use axum::http::header::{ACCEPT, ACCEPT_CHARSET, ACCESS_CONTROL_ALLOW_CREDENTIALS, CONTENT_ENCODING, CONTENT_TYPE, ORIGIN, REFERER, SET_COOKIE};
 
 use backend::{
     api::{
@@ -81,7 +83,8 @@ async fn main() -> anyhow::Result<()> {
         .allow_origin(frontend_origin)
         .allow_origin(localhost_origin)
         .allow_methods([Method::GET, Method::POST, Method::DELETE, Method::OPTIONS])
-        .allow_headers([header::CONTENT_TYPE, header::AUTHORIZATION, header::ACCEPT])
+        .allow_headers([ACCEPT_ENCODING,CONTENT_ENCODING, REFERER, ORIGIN, ACCEPT, CONTENT_TYPE, ACCEPT_CHARSET, REFERER, ACCESS_CONTROL_ALLOW_CREDENTIALS])
+        .expose_headers([SET_COOKIE, CONTENT_ENCODING, ACCEPT_ENCODING])
         .allow_credentials(true);
 
     let protected = Router::new()
