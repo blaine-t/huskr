@@ -10,8 +10,6 @@ pub fn MyProfile() -> Element {
         retrieve_user_self().await
     });
 
-    
-
     rsx! {
         div {
             if let Some(profile) = &*profile.read() {
@@ -43,7 +41,7 @@ async fn retrieve_user_self() -> Result<UserResponse, reqwest::Error> {
     let api_url = format!("{API_URL}user/me");
     let client = reqwest::Client::new();
     let mut response = client.get(api_url)
-    //.fetch_credentials_include()
+    .fetch_credentials_include()
     .header("access-control-allow-credentials", "include")
     .send().await?;
 
