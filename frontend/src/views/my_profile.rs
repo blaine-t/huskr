@@ -10,16 +10,26 @@ pub fn MyProfile() -> Element {
         retrieve_user_self().await
     });
 
+    
+
     rsx! {
         div {
             if let Some(profile) = &*profile.read() {
-                 match profile {
+                match profile {
                     Ok(_) => {
-                       println!("it worked!");
-                       3;
+                       rsx!{
+                        div {
+                            h1 { "we did it" }
+                        }
+                        
+                    }
                     },
-                    Err(_) => {
-                       2;
+                    Err(e) => {
+                       rsx!{
+                        div {
+                            h1 { "{e:?}" }
+                        }
+                        }
                     },
                 }
             } else {
@@ -30,7 +40,7 @@ pub fn MyProfile() -> Element {
 }
 
 async fn retrieve_user_self() -> Result<UserResponse, reqwest::Error> {
-    let api_url = format!("{API_URL}/api/user/retrieve_username");
+    let api_url = format!("{API_URL}user/me");
     let client = reqwest::Client::new();
     let mut response = client.get(api_url)
     //.fetch_credentials_include()

@@ -16,7 +16,6 @@ pub fn Register() -> Element {
                 a {
                     href: "https://api.huskr.us/auth/login", "ligma",
                 }
-                
             }
             div {
 
