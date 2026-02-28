@@ -76,11 +76,12 @@ async fn main() -> anyhow::Result<()> {
     let frontend_origin: HeaderValue = frontend_url
         .parse()
         .expect("FRONTEND_URL is not a valid HTTP origin");
-    let cors = CorsLayer::new()
-        .allow_origin(frontend_origin)
-        .allow_methods([Method::GET, Method::POST, Method::DELETE, Method::OPTIONS])
-        .allow_headers([header::CONTENT_TYPE, header::AUTHORIZATION, header::ACCEPT])
-        .allow_credentials(true);
+    let cors = CorsLayer::very_permissive();
+    // let cors = CorsLayer::new()
+    //     .allow_origin(frontend_origin)
+    //     .allow_methods([Method::GET, Method::POST, Method::DELETE, Method::OPTIONS])
+    //     .allow_headers([header::CONTENT_TYPE, header::AUTHORIZATION, header::ACCEPT])
+    //     .allow_credentials(true);
 
     let protected = Router::new()
         .route("/user/me", get(me))
