@@ -35,7 +35,8 @@ async fn main() -> anyhow::Result<()> {
     let backend = MicrosoftBackend::new(pool.clone(), client_id, client_secret, &tenant, redirect_url)?;
 
     let session_store = MemoryStore::default();
-    let session_layer = SessionManagerLayer::new(session_store);
+    let session_layer = SessionManagerLayer::new(session_store)
+        .with_same_site(tower_sessions::cookie::SameSite::Lax);
     let auth_layer = AuthManagerLayerBuilder::new(backend.clone(), session_layer).build();
 
     let state = AppState { pool, backend };

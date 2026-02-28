@@ -21,21 +21,23 @@ pub struct CallbackParams {
 pub async fn login(
     State(state): State<AppState>,
     auth_session: AuthSessionType,
-) -> Redirect {
+) -> Result<Redirect, crate::error::AppError> {
     let (url, csrf, pkce_verifier) = state.backend.authorize_url();
 
     auth_session
         .session
         .insert("csrf_state", csrf.secret())
         .await
-        .ok();
+        .map_err(|e| crate::error::AppError::OAuth(format!("session insert csrf_state: {e}")))?;
     auth_session
         .session
         .insert("pkce_verifier", pkce_verifier.secret())
         .await
-        .ok();
+        .map_err(|e| crate::error::AppError::OAuth(format!("session insert pkce_verifier: {e}")))?;
 
-    Redirect::to(url.as_str())
+    tracing::debug!(csrf = %csrf.secret(), "stored csrf_state in session");
+
+    Ok(Redirect::to(url.as_str()))
 }
 
 pub async fn callback(
@@ -44,8 +46,12 @@ pub async fn callback(
     Query(params): Query<CallbackParams>,
 ) -> Result<Redirect, crate::error::AppError> {
     let stored_state: Option<String> = auth_session.session.get("csrf_state").await.ok().flatten();
+    tracing::debug!(stored = ?stored_state, received = %params.state, "csrf check");
     if stored_state.as_deref() != Some(&params.state) {
-        return Err(crate::error::AppError::OAuth("csrf mismatch".into()));
+        return Err(crate::error::AppError::OAuth(format!(
+            "csrf mismatch: stored={stored_state:?}, received={}",
+            params.state
+        )));
     }
 
     let pkce_verifier: String = auth_session
