@@ -123,18 +123,21 @@ function openChat(user, me) {
     </div>
   `;
 
+  document.querySelector('.view')?.classList.add('chat-active');
+
   document.getElementById('chat-back-btn').addEventListener('click', () => {
     if (pollTimer) { clearInterval(pollTimer); pollTimer = null; }
     window.history.replaceState(null, '', '#/messages');
+    document.querySelector('.view')?.classList.remove('chat-active');
     chatView.classList.remove('visible');
     chatView.innerHTML = '';
     panel.classList.remove('hidden');
   });
 
-  async function loadMessages() {
+  async function loadMessages(scrollToBottom = false) {
     try {
       const msgs = await getMessages(user.id);
-      renderChatMessages(msgs, me.id);
+      renderChatMessages(msgs, me.id, scrollToBottom);
     } catch { /* ignore */ }
   }
 
@@ -182,17 +185,18 @@ function openChat(user, me) {
     document.getElementById('chat-image-preview').hidden = true;
     try {
       await sendMessage(user.id, content, imageToSend);
-      await loadMessages();
+      await loadMessages(true);
     } catch { /* ignore */ }
   }
 
-  loadMessages();
-  pollTimer = setInterval(loadMessages, 5000);
+  loadMessages(true);
+  pollTimer = setInterval(() => loadMessages(false), 5000);
 }
 
-function renderChatMessages(messages, myId) {
+function renderChatMessages(messages, myId, scrollToBottom = false) {
   const container = document.getElementById('chat-messages');
   if (!container) return;
+  const nearBottom = container.scrollHeight - container.scrollTop - container.clientHeight < 60;
   container.innerHTML = messages.map(msg => {
     const mine = msg.sender_id === myId;
     const textHtml = msg.content ? `<span>${escHtml(msg.content)}</span>` : '';
@@ -204,7 +208,9 @@ function renderChatMessages(messages, myId) {
         <div class="bubble">${imgHtml}${textHtml}</div>
       </div>`;
   }).join('');
-  container.scrollTop = container.scrollHeight;
+  if (scrollToBottom || nearBottom) {
+    container.scrollTop = container.scrollHeight;
+  }
 }
 
 function escHtml(str) {

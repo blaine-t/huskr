@@ -50,3 +50,16 @@
 #navbar .nav-tab:hover {
   color: var(--coral);
 }
+
+@media (min-width: 640px) {
+  #navbar {
+    justify-content: center;
+    gap: 3rem;
+  }
+
+  #navbar .nav-tab {
+    flex: none;
+    padding: 8px 2.5rem;
+    font-size: 0.75rem;
+  }
+}

@@ -250,6 +250,12 @@
   display: none;
 }
 
+/* Prevent the outer .view from scrolling/adding padding while chat is open */
+.view.chat-active {
+  overflow: hidden;
+  padding-bottom: 0;
+}
+
 /* Attach button */
 #chat-attach-btn {
   background: none;
