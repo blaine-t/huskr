@@ -99,9 +99,9 @@
   <img id="profile-img" class="avatar" src="" alt="" style="display:none">
 </section>
 
-<!-- ── POST /likes ───────────────────────────────────────── -->
+<!-- ── POST /like ───────────────────────────────────────── -->
 <section>
-  <h3><span class="method post">POST</span> /likes</h3>
+  <h3><span class="method post">POST</span> /like</h3>
   <label>liked_id
     <input type="number" id="liked-id" placeholder="User ID to like/pass">
   </label>
@@ -236,7 +236,7 @@
   }
 
   async function quickLike(liked_id, is_like, btn) {
-    const r = await api('/likes', {
+    const r = await api('/like', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ liked_id, is_like }),
