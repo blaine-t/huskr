@@ -22,6 +22,7 @@ struct MockUser {
     major: &'static str,
     bio: &'static str,
     interests: &'static [&'static str],
+    image_key: &'static str,
 }
 
 const MOCK_USERS: &[MockUser] = &[
@@ -35,6 +36,7 @@ const MOCK_USERS: &[MockUser] = &[
         major: "Computer Science",
         bio: "Coffee-fuelled coder who loves hiking and terrible puns.",
         interests: &["Hiking", "Coffee", "Video Games", "Open Source"],
+        image_key: "profiles/mock1"
     },
     MockUser {
         oid: "seed-oid-002",
@@ -46,6 +48,7 @@ const MOCK_USERS: &[MockUser] = &[
         major: "Mechanical Engineering",
         bio: "Robotics club president. Can fix (and break) almost anything.",
         interests: &["Robotics", "3D Printing", "Cycling", "Coffee"],
+        image_key: "profiles/mock2"
     },
     MockUser {
         oid: "seed-oid-003",
@@ -57,6 +60,7 @@ const MOCK_USERS: &[MockUser] = &[
         major: "Biology",
         bio: "Pre-med student, amateur photographer, and plant parent.",
         interests: &["Photography", "Hiking", "Cooking", "Reading"],
+        image_key: "profiles/mock3"
     },
     MockUser {
         oid: "seed-oid-004",
@@ -68,6 +72,7 @@ const MOCK_USERS: &[MockUser] = &[
         major: "Economics",
         bio: "Aspiring economist who moonlights as a jazz drummer.",
         interests: &["Jazz", "Economics", "Chess", "Cycling"],
+        image_key: "profiles/mock4"
     },
     MockUser {
         oid: "seed-oid-005",
@@ -79,6 +84,7 @@ const MOCK_USERS: &[MockUser] = &[
         major: "Psychology",
         bio: "Bookworm and aspiring therapist. Ask me about cognitive biases.",
         interests: &["Reading", "Psychology", "Yoga", "Cooking"],
+        image_key: "profiles/mock5"
     },
     MockUser {
         oid: "seed-oid-006",
@@ -90,6 +96,7 @@ const MOCK_USERS: &[MockUser] = &[
         major: "Fine Arts",
         bio: "Painter, illustrator, and chronic overthinker.",
         interests: &["Painting", "Photography", "Chess", "Video Games"],
+        image_key: "profiles/mock6"
     },
     MockUser {
         oid: "seed-oid-007",
@@ -101,6 +108,7 @@ const MOCK_USERS: &[MockUser] = &[
         major: "Data Science",
         bio: "Numbers person by day, K-drama binge-watcher by night.",
         interests: &["Open Source", "Yoga", "Cooking", "Chess"],
+        image_key: "profiles/mock7"
     },
     MockUser {
         oid: "seed-oid-008",
@@ -112,6 +120,7 @@ const MOCK_USERS: &[MockUser] = &[
         major: "Physics",
         bio: "Astrophysics enthusiast who also happens to love reggae music.",
         interests: &["Jazz", "Cycling", "3D Printing", "Reading"],
+        image_key: "profiles/mock8"
     },
 ];
 
@@ -178,8 +187,8 @@ async fn upsert_user(pool: &SqlitePool, u: &MockUser) -> anyhow::Result<i64> {
 
     sqlx::query!(
         r#"
-        INSERT INTO users (oid, email, display_name, full_name, age, is_rso, major, bio)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        INSERT INTO users (oid, email, display_name, full_name, age, is_rso, major, bio, image_key)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
         ON CONFLICT(oid) DO UPDATE SET
             email        = excluded.email,
             display_name = excluded.display_name,
@@ -188,6 +197,7 @@ async fn upsert_user(pool: &SqlitePool, u: &MockUser) -> anyhow::Result<i64> {
             is_rso       = excluded.is_rso,
             major        = excluded.major,
             bio          = excluded.bio,
+            image_key    = excluded.image_key,
             updated_at   = datetime('now')
         "#,
         u.oid,
@@ -198,6 +208,7 @@ async fn upsert_user(pool: &SqlitePool, u: &MockUser) -> anyhow::Result<i64> {
         is_rso_i,
         u.major,
         u.bio,
+        u.image_key
     )
     .execute(pool)
     .await?;
