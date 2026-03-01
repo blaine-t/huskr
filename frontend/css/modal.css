@@ -1,7 +1,7 @@
 #match-modal {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.75);
+  background: rgba(29, 19, 15, 0.78);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -22,6 +22,7 @@
 .match-modal-card {
   background: var(--surface);
   border-radius: var(--radius);
+  border-top: 4px solid var(--coral);
   padding: 2rem 1.5rem;
   max-width: 340px;
   width: 100%;
@@ -36,9 +37,8 @@
 
 .match-modal-card h2 {
   font-size: 2rem;
-  background: linear-gradient(135deg, var(--coral), var(--teal));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  font-weight: 700;
+  color: var(--coral);
   margin-bottom: 0.25rem;
 }
 
@@ -88,6 +88,7 @@
 .match-modal-actions button {
   width: 100%;
   padding: 0.75rem;
+  font-size: 0.875rem;
 }
 
 /* Toast notifications */
@@ -105,11 +106,12 @@
 }
 
 .toast {
-  background: rgba(34, 34, 34, 0.9);
-  color: #fff;
-  border-radius: 99px;
+  background: #1d130f;
+  color: #fefdfa;
+  border-radius: 2px;
   padding: 0.5rem 1.25rem;
-  font-size: 0.9rem;
+  font-size: 0.875rem;
+  font-weight: 600;
   white-space: nowrap;
   animation: toast-in 0.25s ease;
   pointer-events: none;

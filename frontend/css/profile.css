@@ -6,6 +6,7 @@
 
 #profile-view h1 {
   font-size: 1.6rem;
+  font-weight: 700;
   margin-bottom: 1.5rem;
 }
 
@@ -39,11 +40,16 @@
 }
 
 .upload-btn {
-  background: transparent;
+  background: #fefdfa;
   color: var(--coral);
-  border: 1.5px solid var(--coral);
-  font-size: 0.85rem;
-  padding: 0.4rem 1rem;
+  border: 2px solid var(--coral);
+  font-size: 0.84rem;
+  padding: 0.5rem 1rem;
+  font-weight: 600;
+}
+
+.upload-btn:hover {
+  background: rgba(208, 0, 0, 0.06);
 }
 
 #interest-input-wrapper {
@@ -83,18 +89,18 @@
 #profile-save-btn {
   width: 100%;
   padding: 0.8rem;
-  font-size: 1rem;
+  font-size: 0.875rem;
   margin-top: 0.5rem;
 }
 
 #profile-logout-btn {
   width: 100%;
   padding: 0.8rem;
-  font-size: 1rem;
+  font-size: 0.875rem;
   margin-top: 0.75rem;
   background: transparent;
   color: var(--text-muted);
-  border: 1.5px solid var(--border);
+  border: 2px solid var(--border);
 }
 
 #profile-logout-btn:hover {

@@ -5,12 +5,12 @@
   right: 0;
   height: var(--nav-height);
   background: var(--surface);
-  border-top: 1px solid var(--border);
+  border-top: 3px solid var(--coral);
   display: flex;
   align-items: center;
   justify-content: space-around;
   z-index: 100;
-  box-shadow: 0 -2px 12px rgba(0,0,0,0.06);
+  box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.06);
 }
 
 #navbar .nav-tab {
@@ -26,7 +26,9 @@
   background: none;
   color: var(--text-muted);
   font-size: 0.7rem;
-  font-weight: 500;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
   transition: color 0.15s;
   border-radius: 0;
 }
