@@ -1,5 +1,5 @@
 # Huskr
-We made Huskr! In order to connect students on campus, we've made an online app to match each other! 
+We made Huskr! In order to connect students on campus, we've made an online app to match with each other based on your profiles and interests.
 You can easily create a profile through your UNL SSO and account! This way all students can chat and message each other safely.
 
 App accessible at [huskr.us](https://huskr.us)
