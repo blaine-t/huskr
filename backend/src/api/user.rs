@@ -49,6 +49,9 @@ pub async fn update_profile(
 
     let mut bio: Option<String> = None;
     let mut image_key: Option<String> = None;
+    let mut major: Option<String> = None;
+    let mut age: Option<i64> = None;
+    let mut interests: Option<Vec<String>> = None;
 
     while let Some(field) = multipart
         .next_field()
@@ -62,6 +65,33 @@ pub async fn update_profile(
                         .text()
                         .await
                         .map_err(|e| AppError::Internal(e.to_string()))?,
+                );
+            }
+            "major" => {
+                major = Some(
+                    field
+                        .text()
+                        .await
+                        .map_err(|e| AppError::Internal(e.to_string()))?,
+                );
+            }
+            "age" => {
+                let text = field
+                    .text()
+                    .await
+                    .map_err(|e| AppError::Internal(e.to_string()))?;
+                age = text.trim().parse::<i64>().ok();
+            }
+            "interests" => {
+                let text = field
+                    .text()
+                    .await
+                    .map_err(|e| AppError::Internal(e.to_string()))?;
+                interests = Some(
+                    text.split(',')
+                        .map(|s| s.trim().to_string())
+                        .filter(|s| !s.is_empty())
+                        .collect(),
                 );
             }
             "image" => {
@@ -90,15 +120,48 @@ pub async fn update_profile(
         UPDATE users
         SET bio       = COALESCE(?1, bio),
             image_key = COALESCE(?2, image_key),
+            major     = COALESCE(?3, major),
+            age       = COALESCE(?4, age),
             updated_at = datetime('now')
-        WHERE id = ?3
+        WHERE id = ?5
         "#,
     )
     .bind(&bio)
     .bind(&image_key)
+    .bind(&major)
+    .bind(age)
     .bind(user.id)
     .execute(&state.pool)
     .await?;
+
+    // Replace interests if provided
+    if let Some(ref interest_names) = interests {
+        sqlx::query("DELETE FROM user_interests WHERE user_id = ?1")
+            .bind(user.id)
+            .execute(&state.pool)
+            .await?;
+
+        for name in interest_names {
+            sqlx::query("INSERT OR IGNORE INTO interests (name) VALUES (?1)")
+                .bind(name)
+                .execute(&state.pool)
+                .await?;
+
+            let interest_id: i64 =
+                sqlx::query_scalar("SELECT id FROM interests WHERE name = ?1")
+                    .bind(name)
+                    .fetch_one(&state.pool)
+                    .await?;
+
+            sqlx::query(
+                "INSERT OR IGNORE INTO user_interests (user_id, interest_id) VALUES (?1, ?2)",
+            )
+            .bind(user.id)
+            .bind(interest_id)
+            .execute(&state.pool)
+            .await?;
+        }
+    }
 
     let updated = sqlx::query_as::<_, User>("SELECT * FROM users WHERE id = ?1")
         .bind(user.id)

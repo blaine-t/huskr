@@ -63,6 +63,15 @@
     <label>Bio
       <textarea id="bio" rows="3" placeholder="Tell us about yourself…"></textarea>
     </label>
+    <label>Major
+      <input type="text" id="major" placeholder="e.g. Computer Science">
+    </label>
+    <label>Age
+      <input type="number" id="age" placeholder="e.g. 21" min="16" max="120">
+    </label>
+    <label>Interests <small style="font-weight:normal;color:#666">(comma-separated)</small>
+      <input type="text" id="interests" placeholder="e.g. hiking, chess, coffee">
+    </label>
     <label>Profile image
       <input type="file" id="image" accept="image/*">
     </label>
@@ -182,11 +191,17 @@
   // ── /user/profile ─────────────────────────────────────────
   document.getElementById('profile-form').addEventListener('submit', async (e) => {
     e.preventDefault();
-    const form  = new FormData();
-    const bio   = document.getElementById('bio').value;
-    const image = document.getElementById('image').files[0];
-    if (bio)   form.append('bio', bio);
-    if (image) form.append('image', image);
+    const form      = new FormData();
+    const bio       = document.getElementById('bio').value;
+    const major     = document.getElementById('major').value;
+    const age       = document.getElementById('age').value;
+    const interests = document.getElementById('interests').value;
+    const image     = document.getElementById('image').files[0];
+    if (bio)       form.append('bio', bio);
+    if (major)     form.append('major', major);
+    if (age)       form.append('age', age);
+    if (interests) form.append('interests', interests);
+    if (image)     form.append('image', image);
     const r = await api('/user/profile', { method: 'POST', body: form });
     show('upload-out', r);
   });
