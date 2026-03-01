@@ -62,12 +62,20 @@ export async function getMessages(userId) {
   return res.json();
 }
 
-export async function sendMessage(recipient_id, content) {
-  const res = await request('POST', '/message', { recipient_id, content });
+export async function sendMessage(recipient_id, content, image) {
+  const fd = new FormData();
+  fd.append('recipient_id', String(recipient_id));
+  fd.append('content', content || '');
+  if (image) fd.append('image', image);
+  const res = await request('POST', '/message', fd);
   if (!res.ok) throw new Error('sendMessage failed');
   return res.json();
 }
 
 export function profileImageUrl(id) {
   return `/profiles/${id}/image`;
+}
+
+export function messageImageUrl(messageId) {
+  return `/messages/${messageId}/image`;
 }

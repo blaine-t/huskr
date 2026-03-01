@@ -239,3 +239,88 @@
 #messages-list-panel.hidden {
   display: none;
 }
+
+/* Attach button */
+#chat-attach-btn {
+  background: none;
+  color: var(--text-muted);
+  border-radius: 50%;
+  width: 42px;
+  height: 42px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+#chat-attach-btn:hover {
+  color: var(--coral);
+}
+
+#chat-attach-btn svg {
+  width: 20px;
+  height: 20px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* Image preview strip above input */
+#chat-image-preview {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+#chat-image-preview-img {
+  height: 60px;
+  width: 60px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+}
+
+#chat-image-clear-btn {
+  background: none;
+  color: var(--text-muted);
+  padding: 0.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#chat-image-clear-btn:hover {
+  color: var(--coral);
+}
+
+#chat-image-clear-btn svg {
+  width: 16px;
+  height: 16px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+}
+
+/* Inline image inside chat bubble */
+.bubble-img {
+  display: block;
+  max-width: 100%;
+  border-radius: 12px;
+  margin-bottom: 0.25rem;
+}
+
+.bubble-img:only-child {
+  margin-bottom: 0;
+}
+
+.bubble span {
+  display: block;
+}

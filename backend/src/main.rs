@@ -19,7 +19,7 @@ use backend::{
     api::{
         likes::submit_like,
         matches::get_matches,
-        messages::{get_messages, send_message},
+        messages::{get_message_image, get_messages, send_message},
         profiles::{compatible_profiles, get_profile, get_profile_image},
         user::{me, update_profile},
     },
@@ -102,6 +102,7 @@ async fn main() -> anyhow::Result<()> {
         .route("/matches", get(get_matches))
         .route("/message", post(send_message))
         .route("/messages/{user_id}", get(get_messages))
+        .route("/messages/{message_id}/image", get(get_message_image))
         // static segment must be declared before the dynamic :id capture
         .route("/profiles/compatible", get(compatible_profiles))
         .route("/profiles/{id}", get(get_profile))

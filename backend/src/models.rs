@@ -133,14 +133,8 @@ pub struct Message {
     pub sender_id: i64,
     pub recipient_id: i64,
     pub content: String,
+    pub image_key: Option<String>,
     pub created_at: String,
-}
-
-/// Payload used when creating a new message.
-#[derive(Debug, Deserialize)]
-pub struct NewMessage {
-    pub recipient_id: i64,
-    pub content: String,
 }
 
 // ---------------------------------------------------------------------------
