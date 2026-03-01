@@ -1,6 +1,6 @@
 # Huskr
-
-A friend-making app for university students. Swipe through campus profiles, match with people who share your interests, and chat — all behind your university Microsoft account.
+We made Huskr! In order to connect students on campus, we've made an online app to match each other! 
+You can easily create a profile through your UNL SSO and account! This way all students can chat and message each other safely.
 
 ## Features
 
