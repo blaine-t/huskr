@@ -147,15 +147,18 @@ function openChat(user, me) {
     document.getElementById('chat-file-input').click();
   });
 
-  document.getElementById('chat-file-input').addEventListener('change', e => {
+  document.getElementById('chat-file-input').addEventListener('change', async e => {
     const file = e.target.files[0];
     if (!file) return;
-    pendingImage = file;
+    // Read into memory immediately so iOS camera-roll access can't be revoked
+    // before the fetch reads the data.
+    const buf = await file.arrayBuffer();
+    pendingImage = new Blob([buf], { type: file.type || 'image/jpeg' });
+    e.target.value = '';
     const preview = document.getElementById('chat-image-preview');
     const previewImg = document.getElementById('chat-image-preview-img');
-    previewImg.src = URL.createObjectURL(file);
+    previewImg.src = URL.createObjectURL(pendingImage);
     preview.hidden = false;
-    e.target.value = '';
   });
 
   document.getElementById('chat-image-clear-btn').addEventListener('click', () => {
@@ -180,13 +183,16 @@ function openChat(user, me) {
     const imageToSend = pendingImage;
     pendingImage = null;
     const previewImg = document.getElementById('chat-image-preview-img');
-    if (previewImg.src) URL.revokeObjectURL(previewImg.src);
+    const blobUrl = previewImg.src;
     previewImg.src = '';
     document.getElementById('chat-image-preview').hidden = true;
     try {
       await sendMessage(user.id, content, imageToSend);
       await loadMessages(true);
-    } catch { /* ignore */ }
+    } catch { /* ignore */ } finally {
+      // Revoke only after the fetch has finished reading the data
+      if (blobUrl) URL.revokeObjectURL(blobUrl);
+    }
   }
 
   loadMessages(true);
