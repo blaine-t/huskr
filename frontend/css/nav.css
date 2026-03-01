@@ -52,14 +52,14 @@
 }
 
 @media (min-width: 640px) {
-  #navbar {
-    justify-content: center;
-    gap: 3rem;
+  #navbar .nav-tab {
+    padding: 10px 0;
+    font-size: 0.75rem;
+    gap: 6px;
   }
 
-  #navbar .nav-tab {
-    flex: none;
-    padding: 8px 2.5rem;
-    font-size: 0.75rem;
+  #navbar .nav-tab svg {
+    width: 26px;
+    height: 26px;
   }
 }

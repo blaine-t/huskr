@@ -250,10 +250,18 @@
   display: none;
 }
 
-/* Prevent the outer .view from scrolling/adding padding while chat is open */
+/* Prevent the outer .view from scrolling while chat is open.
+   Use height: 100% chain so #chat-view never exceeds the actual visible area. */
 .view.chat-active {
   overflow: hidden;
-  padding-bottom: 0;
+}
+
+.view.chat-active #messages-view {
+  height: 100%;
+}
+
+.view.chat-active #chat-view {
+  height: 100%;
 }
 
 /* Attach button */
