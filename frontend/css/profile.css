@@ -1,0 +1,103 @@
+#profile-view {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 1.5rem 1rem 2rem;
+}
+
+#profile-view h1 {
+  font-size: 1.6rem;
+  margin-bottom: 1.5rem;
+}
+
+.avatar-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.avatar-circle {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.5rem;
+  overflow: hidden;
+  border: 3px solid var(--coral);
+}
+
+.avatar-circle img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.upload-btn {
+  background: transparent;
+  color: var(--coral);
+  border: 1.5px solid var(--coral);
+  font-size: 0.85rem;
+  padding: 0.4rem 1rem;
+}
+
+#interest-input-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  align-items: center;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 0.4rem;
+  background: var(--surface);
+  transition: border-color 0.15s;
+}
+
+#interest-input-wrapper:focus-within {
+  border-color: var(--coral);
+}
+
+#interest-input-wrapper input {
+  border: none;
+  flex: 1;
+  min-width: 120px;
+  padding: 0.2rem 0.4rem;
+}
+
+#interest-input-wrapper input:focus {
+  outline: none;
+  border: none;
+}
+
+.interest-hint {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin-top: 0.3rem;
+}
+
+#profile-save-btn {
+  width: 100%;
+  padding: 0.8rem;
+  font-size: 1rem;
+  margin-top: 0.5rem;
+}
+
+#profile-logout-btn {
+  width: 100%;
+  padding: 0.8rem;
+  font-size: 1rem;
+  margin-top: 0.75rem;
+  background: transparent;
+  color: var(--text-muted);
+  border: 1.5px solid var(--border);
+}
+
+#profile-logout-btn:hover {
+  border-color: var(--coral);
+  color: var(--coral);
+}

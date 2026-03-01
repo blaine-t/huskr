@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Huskr</title>
+  <link rel="stylesheet" href="/css/variables.css" />
+  <link rel="stylesheet" href="/css/base.css" />
+  <link rel="stylesheet" href="/css/nav.css" />
+  <link rel="stylesheet" href="/css/card.css" />
+  <link rel="stylesheet" href="/css/profile.css" />
+  <link rel="stylesheet" href="/css/messages.css" />
+  <link rel="stylesheet" href="/css/modal.css" />
+</head>
+<body>
+  <div id="app">
+    <!-- Views are injected here by the router -->
+    <div id="view-container" class="view"></div>
+
+    <!-- Bottom nav (hidden on login page) -->
+    <nav id="navbar" class="hidden"></nav>
+  </div>
+
+  <!-- Match modal (global overlay) -->
+  <div id="match-modal" class="hidden">
+    <div class="match-modal-card">
+      <h2>It's a Match!</h2>
+      <p>You and <span id="match-other-name"></span> liked each other</p>
+      <div class="match-avatars">
+        <div class="match-avatar-img" id="match-my-avatar">🙂</div>
+        <div class="match-avatar-img" id="match-their-avatar">🙂</div>
+      </div>
+      <div class="match-modal-actions">
+        <button id="match-msg-btn" class="btn-teal">Send a Message</button>
+        <button id="match-dismiss-btn" class="btn-secondary">Keep Swiping</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast container -->
+  <div id="toast-container"></div>
+
+  <script type="module" src="/js/app.js"></script>
+</body>
+</html>

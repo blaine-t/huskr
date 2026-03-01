@@ -6,7 +6,7 @@ use axum::{
 };
 use axum_login::AuthManagerLayerBuilder;
 use reqwest::header::ACCEPT_ENCODING;
-use tower_http::{cors::CorsLayer, trace::TraceLayer};
+use tower_http::{cors::CorsLayer, services::ServeDir, trace::TraceLayer};
 use tower_sessions::{MemoryStore, SessionManagerLayer};
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt, EnvFilter};
 
@@ -18,6 +18,7 @@ use axum::http::header::{ACCEPT, ACCEPT_CHARSET, ACCESS_CONTROL_ALLOW_CREDENTIAL
 use backend::{
     api::{
         likes::submit_like,
+        matches::get_matches,
         messages::{get_messages, send_message},
         profiles::{compatible_profiles, get_profile, get_profile_image},
         user::{me, update_profile},
@@ -52,9 +53,9 @@ async fn main() -> anyhow::Result<()> {
     let client_secret = std::env::var("AZURE_CLIENT_SECRET")?;
     let tenant = std::env::var("AZURE_TENANT_ID").unwrap_or_else(|_| "common".into());
     let redirect_url = std::env::var("REDIRECT_URL")?;
-    // Base URL of the Leptos SPA, used for CORS and post-auth redirects.
+    // Base URL of the SPA (same origin since we serve it with ServeDir).
     let frontend_url =
-        std::env::var("FRONTEND_URL").unwrap_or_else(|_| "http://localhost:3001".into());
+        std::env::var("FRONTEND_URL").unwrap_or_else(|_| "http://localhost:48757".into());
 
     let backend =
         MicrosoftBackend::new(pool.clone(), client_id, client_secret, &tenant, redirect_url)?;
@@ -98,6 +99,7 @@ async fn main() -> anyhow::Result<()> {
         .route("/user/me", get(me))
         .route("/user/profile", post(update_profile))
         .route("/like", post(submit_like))
+        .route("/matches", get(get_matches))
         .route("/message", post(send_message))
         .route("/messages/{user_id}", get(get_messages))
         // static segment must be declared before the dynamic :id capture
@@ -114,7 +116,8 @@ async fn main() -> anyhow::Result<()> {
         .layer(auth_layer)
         .layer(cors)
         .layer(TraceLayer::new_for_http())
-        .with_state(state);
+        .with_state(state)
+        .fallback_service(ServeDir::new("../frontend").append_index_html_on_directories(true));
 
     let listener = tokio::net::TcpListener::bind("0.0.0.0:48757").await?;
     tracing::info!("listening on {}", listener.local_addr()?);
