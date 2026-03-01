@@ -3,3 +3,4 @@ target/
 .serena/
 .claude/
 *.db
+uploads/

@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Huskr API Test</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    body    { font-family: sans-serif; max-width: 720px; margin: 40px auto; padding: 0 16px; color: #111; }
+    h1      { font-size: 1.4rem; margin-bottom: 4px; }
+    h2      { font-size: 1rem; margin: 0 0 10px; color: #555; font-weight: normal; text-transform: uppercase; letter-spacing: .05em; }
+    section { border: 1px solid #ddd; border-radius: 6px; padding: 16px; margin-bottom: 20px; }
+    section > h3 { margin: 0 0 12px; font-size: 1rem; }
+    .method { display: inline-block; padding: 2px 7px; border-radius: 3px; font-size: .75rem; font-weight: bold; margin-right: 6px; vertical-align: middle; }
+    .get    { background: #e8f5e9; color: #2e7d32; }
+    .post   { background: #e3f2fd; color: #1565c0; }
+    pre     { background: #f5f5f5; padding: 12px; border-radius: 4px; overflow: auto; max-height: 300px; font-size: .8rem; margin: 10px 0 0; white-space: pre-wrap; }
+    button  { padding: 6px 14px; cursor: pointer; border: 1px solid #aaa; border-radius: 4px; background: #fff; }
+    button:hover { background: #f0f0f0; }
+    label   { display: block; font-size: .85rem; font-weight: bold; margin-top: 10px; }
+    label:first-child { margin-top: 0; }
+    input[type=text], input[type=number], textarea, select {
+      width: 100%; padding: 6px 8px; margin-top: 3px; border: 1px solid #ccc; border-radius: 4px; font-size: .9rem;
+    }
+    textarea   { resize: vertical; }
+    .row       { display: flex; gap: 8px; align-items: flex-end; flex-wrap: wrap; }
+    .row input { flex: 1; }
+    img.avatar { max-width: 160px; border-radius: 50%; display: block; margin-top: 10px; }
+    .tag       { display: inline-block; background: #eee; border-radius: 3px; padding: 1px 6px; font-size: .75rem; margin: 2px; }
+    .card      { border: 1px solid #eee; border-radius: 6px; padding: 10px; margin-top: 8px; display: flex; gap: 12px; align-items: center; }
+    .card img  { width: 56px; height: 56px; border-radius: 50%; object-fit: cover; }
+    .card-info { flex: 1; }
+    .card-info strong { display: block; }
+    .card-info small  { color: #666; }
+    .card-actions button { margin-right: 6px; }
+  </style>
+</head>
+<body>
+
+<h1>Huskr API Test</h1>
+<h2>Backend: <span id="base-display"></span></h2>
+
+<!-- ── Auth ─────────────────────────────────────────────── -->
+<section>
+  <h3>Auth</h3>
+  <div class="row" style="gap:8px">
+    <button onclick="openLogin()"><span class="method get">GET</span> /auth/login</button>
+    <button onclick="doLogout()"><span class="method get">GET</span> /auth/logout</button>
+  </div>
+  <pre id="auth-out">—</pre>
+</section>
+
+<!-- ── GET /user/me ──────────────────────────────────────── -->
+<section>
+  <h3><span class="method get">GET</span> /user/me</h3>
+  <button onclick="loadMe()">Send</button>
+  <pre id="me-out">—</pre>
+</section>
+
+<!-- ── POST /user/profile ────────────────────────────────── -->
+<section>
+  <h3><span class="method post">POST</span> /user/profile</h3>
+  <form id="profile-form">
+    <label>Bio
+      <textarea id="bio" rows="3" placeholder="Tell us about yourself…"></textarea>
+    </label>
+    <label>Profile image
+      <input type="file" id="image" accept="image/*">
+    </label>
+    <button type="submit" style="margin-top:10px">Upload</button>
+  </form>
+  <pre id="upload-out">—</pre>
+</section>
+
+<!-- ── GET /profiles/compatible ─────────────────────────── -->
+<section>
+  <h3><span class="method get">GET</span> /profiles/compatible</h3>
+  <button onclick="loadCompatible()">Send</button>
+  <div id="compatible-cards"></div>
+  <pre id="compatible-out">—</pre>
+</section>
+
+<!-- ── GET /profiles/:id ─────────────────────────────────── -->
+<section>
+  <h3><span class="method get">GET</span> /profiles/:id</h3>
+  <div class="row">
+    <input type="number" id="profile-id" placeholder="User ID">
+    <button onclick="loadProfile()">Send</button>
+  </div>
+  <pre id="profile-out">—</pre>
+</section>
+
+<!-- ── GET /profiles/:id/image ───────────────────────────── -->
+<section>
+  <h3><span class="method get">GET</span> /profiles/:id/image</h3>
+  <div class="row">
+    <input type="number" id="img-id" placeholder="User ID">
+    <button onclick="loadImage()">Send</button>
+  </div>
+  <img id="profile-img" class="avatar" src="" alt="" style="display:none">
+</section>
+
+<!-- ── POST /likes ───────────────────────────────────────── -->
+<section>
+  <h3><span class="method post">POST</span> /likes</h3>
+  <label>liked_id
+    <input type="number" id="liked-id" placeholder="User ID to like/pass">
+  </label>
+  <label style="margin-top:8px">Action
+    <select id="is-like">
+      <option value="true">Like ❤️</option>
+      <option value="false">Pass 👎</option>
+    </select>
+  </label>
+  <button onclick="submitLike()" style="margin-top:10px">Send</button>
+  <pre id="likes-out">—</pre>
+</section>
+
+<!-- ── GET /messages/:user_id ────────────────────────────── -->
+<section>
+  <h3><span class="method get">GET</span> /messages/:user_id</h3>
+  <div class="row">
+    <input type="number" id="get-messages-user-id" placeholder="User ID">
+    <button onclick="getMessages()">Get Messages</button>
+  </div>
+  <div id="messages-list" style="margin-top:12px"></div>
+  <pre id="get-messages-out">—</pre>
+</section>
+
+<!-- ── POST /message ────────────────────────────────────── -->
+<section>
+  <h3><span class="method post">POST</span> /message</h3>
+  <label>recipient_id
+    <input type="number" id="send-message-user-id" placeholder="User ID">
+  </label>
+  <label>content
+    <textarea id="message-content" rows="3" placeholder="Type your message..."></textarea>
+  </label>
+  <button onclick="sendMessage()" style="margin-top:10px">Send Message</button>
+  <pre id="send-message-out">—</pre>
+</section>
+
+<script>
+  const BASE = 'http://localhost:48757';
+  document.getElementById('base-display').textContent = BASE;
+
+  // ── helpers ───────────────────────────────────────────────
+  async function api(path, opts = {}) {
+    const res = await fetch(BASE + path, { credentials: 'include', ...opts });
+    const text = await res.text();
+    let body;
+    try { body = JSON.parse(text); } catch { body = text; }
+    return { status: res.status, body };
+  }
+
+  function show(id, { status, body }) {
+    const text = typeof body === 'string' ? `${status} ${body}` : JSON.stringify(body, null, 2);
+    document.getElementById(id).textContent = `${status}\n${text}`;
+  }
+
+  // ── auth ──────────────────────────────────────────────────
+  function openLogin() {
+    window.open(BASE + '/auth/login', '_blank');
+    document.getElementById('auth-out').textContent = 'Opened login in new tab — complete OAuth flow then come back.';
+  }
+
+  async function doLogout() {
+    const r = await api('/auth/logout');
+    show('auth-out', r);
+  }
+
+  // ── /user/me ──────────────────────────────────────────────
+  async function loadMe() {
+    const r = await api('/user/me');
+    show('me-out', r);
+    // pre-fill profile ID fields with the current user's id
+    if (r.body?.id) {
+      document.getElementById('img-id').value    = r.body.id;
+      document.getElementById('profile-id').value = r.body.id;
+    }
+  }
+
+  // ── /user/profile ─────────────────────────────────────────
+  document.getElementById('profile-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const form  = new FormData();
+    const bio   = document.getElementById('bio').value;
+    const image = document.getElementById('image').files[0];
+    if (bio)   form.append('bio', bio);
+    if (image) form.append('image', image);
+    const r = await api('/user/profile', { method: 'POST', body: form });
+    show('upload-out', r);
+  });
+
+  // ── /profiles/compatible ──────────────────────────────────
+  async function loadCompatible() {
+    const r = await api('/profiles/compatible');
+    show('compatible-out', r);
+    const container = document.getElementById('compatible-cards');
+    container.innerHTML = '';
+    if (!Array.isArray(r.body)) return;
+    r.body.forEach(u => container.appendChild(profileCard(u)));
+  }
+
+  function profileCard(u) {
+    const card = document.createElement('div');
+    card.className = 'card';
+
+    const img = document.createElement('img');
+    img.src = `${BASE}/profiles/${u.id}/image?t=${Date.now()}`;
+    img.onerror = () => img.style.display = 'none';
+    card.appendChild(img);
+
+    const info = document.createElement('div');
+    info.className = 'card-info';
+    info.innerHTML = `
+      <strong>${u.full_name ?? u.display_name ?? 'Unknown'}</strong>
+      <small>${u.major ?? ''} ${u.age ? '· Age ' + u.age : ''}</small>
+      ${u.interests.map(i => `<span class="tag">${i}</span>`).join('')}
+    `;
+    card.appendChild(info);
+
+    const actions = document.createElement('div');
+    actions.className = 'card-actions';
+
+    const likeBtn = document.createElement('button');
+    likeBtn.textContent = '❤️ Like';
+    likeBtn.onclick = () => quickLike(u.id, true, likeBtn);
+
+    const passBtn = document.createElement('button');
+    passBtn.textContent = '👎 Pass';
+    passBtn.onclick = () => quickLike(u.id, false, passBtn);
+
+    actions.append(likeBtn, passBtn);
+    card.appendChild(actions);
+    return card;
+  }
+
+  async function quickLike(liked_id, is_like, btn) {
+    const r = await api('/likes', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ liked_id, is_like }),
+    });
+    btn.textContent += r.status === 201 ? ' 🎉 Match!' : ' ✓';
+    btn.disabled = true;
+  }
+
+  // ── /profiles/:id ─────────────────────────────────────────
+  async function loadProfile() {
+    const id = document.getElementById('profile-id').value;
+    if (!id) return;
+    const r = await api(`/profiles/${id}`);
+    show('profile-out', r);
+  }
+
+  // ── /profiles/:id/image ───────────────────────────────────
+  function loadImage() {
+    const id  = document.getElementById('img-id').value;
+    if (!id) return;
+    const img = document.getElementById('profile-img');
+    img.src   = `${BASE}/profiles/${id}/image?t=${Date.now()}`;
+    img.style.display = 'block';
+    img.onerror = () => { img.style.display = 'none'; alert(`No image for user ${id}`); };
+  }
+
+  // ── /likes ────────────────────────────────────────────────
+  async function submitLike() {
+    const liked_id = parseInt(document.getElementById('liked-id').value);
+    const is_like  = document.getElementById('is-like').value === 'true';
+    if (!liked_id) return;
+    const r = await api('/likes', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ liked_id, is_like }),
+    });
+    show('likes-out', r);
+  }
+
+  // ── /messages/:user_id ────────────────────────────────────
+  async function getMessages() {
+    const user_id = document.getElementById('get-messages-user-id').value;
+    if (!user_id) return;
+    const r = await api(`/messages/${user_id}`);
+    show('get-messages-out', r);
+    
+    const container = document.getElementById('messages-list');
+    container.innerHTML = '';
+    if (!Array.isArray(r.body)) return;
+    
+    if (r.body.length === 0) {
+      container.innerHTML = '<p style="color:#666;font-size:.85rem">No messages yet</p>';
+      return;
+    }
+
+    r.body.forEach(msg => {
+      const div = document.createElement('div');
+      div.style.cssText = 'padding:8px;margin-bottom:6px;background:#f9f9f9;border-radius:4px;font-size:.85rem';
+      div.innerHTML = `
+        <strong style="color:#333">User ${msg.sender_id} → User ${msg.recipient_id}</strong>
+        <small style="color:#666;margin-left:8px">${new Date(msg.created_at).toLocaleString()}</small>
+        <div style="margin-top:4px">${msg.content}</div>
+      `;
+      container.appendChild(div);
+    });
+  }
+
+  // ── /message ─────────────────────────────────────────────
+  async function sendMessage() {
+    const recipient_id = parseInt(document.getElementById('send-message-user-id').value);
+    const content = document.getElementById('message-content').value;
+    if (!recipient_id || !content) return;
+    const r = await api('/message', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ recipient_id, content }),
+    });
+    show('send-message-out', r);
+    if (r.status === 201) {
+      document.getElementById('message-content').value = '';
+    }
+  }
+</script>
+
+</body>
+</html>

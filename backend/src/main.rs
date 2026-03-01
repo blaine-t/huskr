@@ -1,5 +1,5 @@
 use axum::{
-    http::{header, HeaderValue, Method},
+    http::{HeaderValue, Method},
     middleware,
     routing::{get, post},
     Router,
@@ -18,6 +18,7 @@ use axum::http::header::{ACCEPT, ACCEPT_CHARSET, ACCESS_CONTROL_ALLOW_CREDENTIAL
 use backend::{
     api::{
         likes::submit_like,
+        messages::{get_messages, send_message},
         profiles::{compatible_profiles, get_profile, get_profile_image},
         user::{me, update_profile},
     },
@@ -96,7 +97,9 @@ async fn main() -> anyhow::Result<()> {
     let protected = Router::new()
         .route("/user/me", get(me))
         .route("/user/profile", post(update_profile))
-        .route("/likes", post(submit_like))
+        .route("/like", post(submit_like))
+        .route("/message", post(send_message))
+        .route("/messages/{user_id}", get(get_messages))
         // static segment must be declared before the dynamic :id capture
         .route("/profiles/compatible", get(compatible_profiles))
         .route("/profiles/{id}", get(get_profile))
