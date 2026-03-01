@@ -1,4 +1,5 @@
 use axum::{
+    extract::DefaultBodyLimit,
     http::{HeaderValue, Method},
     middleware,
     routing::{get, post},
@@ -97,10 +98,10 @@ async fn main() -> anyhow::Result<()> {
 
     let protected = Router::new()
         .route("/user/me", get(me))
-        .route("/user/profile", post(update_profile))
+        .route("/user/profile", post(update_profile).layer(DefaultBodyLimit::max(20 * 1024 * 1024)))
         .route("/like", post(submit_like))
         .route("/matches", get(get_matches))
-        .route("/message", post(send_message))
+        .route("/message", post(send_message).layer(DefaultBodyLimit::max(20 * 1024 * 1024)))
         .route("/messages/{user_id}", get(get_messages))
         .route("/messages/{message_id}/image", get(get_message_image))
         // static segment must be declared before the dynamic :id capture
